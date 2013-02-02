@@ -3,11 +3,14 @@
 #
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
+
+
 development:
   adapter: postgresql
   host: localhost
-  username: user
-  database: db/development.pg
+  username: wayne
+  password: JoKeppler123
+  database: app_development
   pool: 5
   encoding: utf8
 
@@ -22,18 +25,18 @@ development:
 test: ###&TEST
   adapter: postgresql
   encoding: utf8
-  database: db/test.pg
+  database: app_test
   pool: 5
-  username: 
-  password:
+  username: wayne
+  password: JoKeppler123
 
 production:
   adapter: postgresql
   encoding: utf8
-  database: db/production.pg
+  database: app_production
   pool: 5
-  username: 
-  password:
+  username: wayne
+  password: JoKeppler123
 
 ###cucumber:
  ### <<: *TEST
