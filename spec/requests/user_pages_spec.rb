@@ -13,19 +13,20 @@ describe "User pages" do
       visit users_path
     end
 
-    it { should have_selector('title', text: 'All users') }
-    it { should have_selector('h1',    text: 'All users') }
+    #it { should have_selector('title', text: 'All users') }
+    it { should have_title_text('All users') }
+    it { should have_h1_text('All users') }
 
     describe "pagination" do
 
       before(:all) { 30.times { FactoryGirl.create(:user) } }
       after(:all)  { User.delete_all }
 
-      it { should have_selector('div.pagination') }
+      it { should have_div_pagination }
 
       it "should list each user" do
         User.paginate(page: 1).each do |user|
-          page.should have_selector('li', text: user.name)
+          page.should have_li_username(user.name)
         end
       end
     end
@@ -41,11 +42,12 @@ describe "User pages" do
           visit users_path
         end
 
-        it { should have_link('delete', href: user_path(User.first)) }
+        #it { should have_link('delete', href: user_path(User.first)) }
+        it { should have_delete_link(user_path(User.first)) }
         it "should be able to delete another user" do
           expect { click_link('delete') }.to change(User, :count).by(-1)
         end
-        it { should_not have_link('delete', href: user_path(admin)) }
+        it { should_not have_delete_link(user_path(admin)) }
       end
     end
   end
@@ -53,8 +55,9 @@ describe "User pages" do
   describe "signup page" do
     before { visit signup_path }
 
-    it { should have_selector('h1',    text: 'Sign up') }
-    it { should have_selector('title', text: full_title('Sign up')) }
+    it { should have_h1_text('Sign up') }
+    #it { should have_selector('title', text: full_title('Sign up')) }
+    it { should have_title_text(full_title('Sign up')) }
   end
 
   describe "profile page" do
@@ -64,8 +67,9 @@ describe "User pages" do
 
     before { visit user_path(user) }
 
-    it { should have_selector('h1',    text: user.name) }
-    it { should have_selector('title', text: user.name) }
+    it { should have_h1_text(user.name) }
+    #it { should have_selector('title', text: user.name) }
+    it { should have_title_text user.name }
 
     describe "microposts" do
       it { should have_content(m1.content) }
@@ -88,7 +92,7 @@ describe "User pages" do
       describe "after submission" do
         before { click_button submit }
 
-        it { should have_selector('title', text: 'Sign up') }
+        it { should have_title_text('Sign up') }
         it { should have_content('error') }
         it { should have_content('confirmation') }
         it { should have_content('short') }
@@ -115,8 +119,8 @@ describe "User pages" do
         before { click_button submit }
         let(:user) { User.find_by_email('user@example.com') }
 
-        it { should have_selector('title', text: user.name) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        it { should have_title_text(user.name) }
+        it { should have_success_message('Welcome') }
         it { should have_link('Sign out') }
       end
     end
@@ -130,9 +134,9 @@ describe "User pages" do
     end
 
     describe "page" do
-      it { should have_selector('h1',    text: "Update your profile") }
-      it { should have_selector('title', text: "Edit user") }
-      it { should have_link('change', href: 'http://gravatar.com/emails') }
+      it { should have_h1_text("Update your profile") }
+      it { should have_title_text('Edit user') }
+      it { should have_changepic_link('http://gravatar.com/emails') }
     end
 
     describe "with invalid information" do
@@ -152,9 +156,10 @@ describe "User pages" do
         click_button "Save changes"
       end
 
-      it { should have_selector('title', text: new_name) }
-      it { should have_selector('div.alert.alert-success') }
-      it { should have_link('Sign out', href: signout_path) }
+      it { should have_title_text(new_name) }
+      #it { should have_selector('div.alert.alert-success') }
+      it { should have_success_message }
+      it { should have_signout_link(signout_path) }
       specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
     end
